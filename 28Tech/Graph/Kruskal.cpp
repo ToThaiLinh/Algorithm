@@ -13,6 +13,9 @@ input
 4 5 3
 4 6 10
 5 6 8
+
+output 
+18
 */
 
 const int MAX = 1001;
@@ -40,9 +43,9 @@ int find_set(int v) {
     return parent[v] = find_set(parent[v]);
 }
 
-bool Union(int a, int b) {
-    int a = find_set(a);
-    int b = find_set(b);
+bool Union(int x, int y) {
+    int a = find_set(x);
+    int b = find_set(y);
     if(a == b) return false;
     else {
         if(size[a] < size[b]) {
