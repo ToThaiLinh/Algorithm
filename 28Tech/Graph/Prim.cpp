@@ -21,6 +21,7 @@ const int MAX = 1001;
 int n, m;
 vector< pair<int, int> > adj[MAX];
 bool used[MAX]; //used[i] = true : i thuoc tap V(MST), used[i] = false : i thuoc tap V
+int parent[MAX], d[MAX];
 
 struct canh{
     int x, y, w;
@@ -35,9 +36,13 @@ void input() {
         adj[y].push_back(make_pair(x, w));
     }
     memset(used, false, sizeof(used));
+    for(int i = 1; i <= n; i++) {
+        d[i] = INT_MAX;
+        parent[i] = -1;
+    }
 }
 
-void prim(int u) {
+void prim2(int u) {
     vector<canh> MST; //cay khung
     int d = 0; // chieu dai cay khung
     used[u] = true;
@@ -66,6 +71,37 @@ void prim(int u) {
         cout << MST[i].x << " " << MST[i].y << " " << MST[i].w << endl;
     }
 
+}
+
+void prim(int u) {
+    priority_queue< pair<int, int> , vector< pair<int, int> >, greater< pair<int, int> > > Q;
+    vector<canh> MST;
+    int res = 0;
+    Q.push(make_pair(0, u));
+    while(!Q.empty()) {
+        pair<int, int> top = Q.top(); Q.pop();
+        int dinh = top.second, trongso = top.first;
+
+        if(used[dinh]) continue;
+        res += trongso;
+        used[dinh] = true;
+        canh e; e.x = parent[dinh]; e.y = dinh; e.w = trongso;
+        if(u != dinh) MST.push_back(e);
+
+        for(int i = 0; i < adj[dinh].size(); i++) {
+            int v = adj[dinh][i].first;
+            int w = adj[dinh][i].second;
+            if(!used[v] && w < d[v]) {
+                Q.push(make_pair(w, v));
+                d[v] = w;
+                parent[v] = dinh;
+            }
+        }
+    }
+    cout << "MST : " << res << endl;
+    for(int i = 0; i < MST.size(); i++) {
+        cout << MST[i].x << " " << MST[i].y << " " <<  MST[i].w << endl;
+    }
 }
 
 int main() {
